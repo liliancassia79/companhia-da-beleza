@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Scissors, Sparkles, Palette, Flower2, Eye } from "lucide-react";
 import { Card } from "../ui/card";
+import { Textarea } from "../ui/textarea";
+import { Label } from "../ui/label";
 import type { ComponentType, SVGProps } from "react";
 import { getServices } from "../../services/servicesApi";
 
@@ -20,10 +22,12 @@ interface ServiceSelectionProps {
   selectedService?: {
     id: number;
   };
+  notes?: string;
+  onNotesChange?: (notes: string) => void;
   onSelect: (service: Service) => void;
 }
 
-export function ServiceSelection({ selectedService, onSelect }: ServiceSelectionProps) {
+export function ServiceSelection({ selectedService, notes, onNotesChange, onSelect }: ServiceSelectionProps) {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -103,6 +107,19 @@ return (
             </Card>
           );
         })}
+      </div>
+
+      <div className="mt-8">
+        <Label htmlFor="notes" className="text-white mb-2 block">
+          Informações / Dúvidas
+        </Label>
+        <Textarea
+          id="notes"
+          value={notes || ""}
+          onChange={(e) => onNotesChange && onNotesChange(e.target.value)}
+          className="bg-zinc-800 border-zinc-700 text-white focus:border-amber-500 min-h-[100px]"
+          placeholder="Tem alguma dúvida ou observação? Digite aqui..."
+        />
       </div>
     </div>
   );

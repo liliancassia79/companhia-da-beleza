@@ -2,10 +2,10 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Scissors } from "lucide-react";
 
 const galleryImages = [
-  "https://images.unsplash.com/photo-1761931403671-d020a14928d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBiYXJiZXIlMjBjdXR0aW5nfGVufDF8fHx8MTc3MzgzNjMyOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  "https://images.unsplash.com/photo-1578951395970-4deb0f6833ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBiYXJiZXJzaG9wJTIwZGFya3xlbnwxfHx8fDE3NzM4MzYzMjl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  "https://images.unsplash.com/photo-1617690825153-8bb0a8e3c911?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwaGFpcnN0eWxpc3QlMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzM4MzYzMjl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  "https://images.unsplash.com/photo-1763048208932-cbe149724374?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYWlyJTIwc3R5bGluZyUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3NzM3MzcwNDR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+  "https://galeriaglaser.com.br/wp-content/uploads/2018/11/glaser_blog01_outubro-e1577733833425.jpg",
+  "https://rchloblogprod.akamaized.net/wp-content/mosaico_cortesfemininos.png",
+  "https://d2zdpiztbgorvt.cloudfront.net/region1/br/386417/biz_photo/a206384f0b164b20a75cb01b471975-ester-moraes-unhas-biz-photo-e2552069506c4c4a9159dea5b4109f-booksy.jpeg?size=640x427",
+  "https://img.freepik.com/fotos-gratis/mulher-lavando-a-cabeca-em-um-salao-de-cabeleireiro_1157-27179.jpg?semt=ais_hybrid&w=740&q=80",
   "https://images.unsplash.com/photo-1659391542239-9648f307c0b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5pY3VyZSUyMG5haWxzJTIwcG9saXNofGVufDF8fHx8MTc3MzgzMzI3NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   "https://images.unsplash.com/photo-1712213396688-c6f2d536671f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYWlyJTIwY29sb3JpbmclMjBzYWxvbnxlbnwxfHx8fDE3NzM3MzY0MDV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
 ];

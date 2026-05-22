@@ -23,12 +23,17 @@ export function DarkContact() {
                 <MapPin className="w-8 h-8 text-[#d4af37]" />
               </div>
               <h3 className="text-xl text-white mb-2">Endereço</h3>
-              <p className="text-gray-400">
+              <a 
+                href="https://maps.google.com/?q=Passagem+Péricles+Guedes+63,+Castanheira,+Belém+-+PA,+66645-290" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#d4af37] transition-colors block"
+              >
                 Passagem Péricles Guedes 63<br />
                 Bairro: Castanheira<br />
                 CEP: 66.645-290<br />
                 <span className="text-sm mt-1 block">Atrás do Shopping Castanheira</span>
-              </p>
+              </a>
             </div>
           </div>
 

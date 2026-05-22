@@ -12,8 +12,7 @@ const services: Service[] = [
   { icon: Scissors, title: "Cabelos & Tratamentos" },
   { icon: Palette, title: "Colorimetria & Mechas" },
   { icon: Sparkles, title: "Manicure & Pedicure" },
-  { icon: Eye, title: "Design de Sobrancelhas" },
-  { icon: Flower2, title: "Serviços de Estética" }
+  { icon: Eye, title: "Design de Sobrancelhas" }
 ];
 
 export function DarkServices() {

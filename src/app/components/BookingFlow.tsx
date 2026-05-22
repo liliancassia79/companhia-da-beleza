@@ -37,6 +37,7 @@ export interface BookingData {
   clientName?: string;
   clientPhone?: string;
   clientEmail?: string;
+  notes?: string;
 }
 
 const steps = [
@@ -176,7 +177,9 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
             {currentStep === 1 && (
               <ServiceSelection 
                 selectedService={bookingData.service}
+                notes={bookingData.notes}
                 onSelect={(service) => updateBookingData({ service })}
+                onNotesChange={(notes) => updateBookingData({ notes })}
               />
             )}
             {currentStep === 2 && (
