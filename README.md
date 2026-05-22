@@ -61,3 +61,10 @@ Acessível através do rodapé do site (`/admin`), o painel é protegido por log
 - `/src/supabaseClient.ts` - Configuração de comunicação segura com o Supabase.
 
 ---
+
+## ⚠️ Atenção: Integração Frontend/Backend
+
+**Aviso Importante para a equipe de Backend:**
+A lista de **Serviços** e a lista de **Profissionais** do agendamento estão configuradas de forma fixa (hardcoded) no frontend (dentro dos arquivos `servicesApi.ts` e `professionalsApi.ts`). Isso garante que o site carregue instantaneamente para o cliente, sem depender do tempo de resposta ou da disponibilidade de uma API externa.
+
+Solicitamos expressamente ao Backend que **não modifique o código Frontend** na tentativa de conectar a aba de agendamentos a rotas dinâmicas de serviços/profissionais. O Frontend deve continuar responsável por essa camada visual, mantendo a estabilidade da interface independentemente de serviços em nuvem ou bancos de dados externos.
