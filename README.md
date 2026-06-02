@@ -62,6 +62,25 @@ Acessível através do rodapé do site (`/admin`), o painel é protegido por log
 
 ---
 
+## 🗄️ Configuração do Banco de Dados (Supabase)
+
+Para garantir que o fluxo de agendamento online funcione sem erros, a tabela **`appointments`** no banco de dados Supabase deve ser configurada obrigatoriamente com a seguinte estrutura:
+
+### Colunas Exigidas na Tabela `appointments`:
+* **`client_name`** (Tipo: `text`)
+* **`client_phone`** (Tipo: `text`)
+* **`starts_at`** (Tipo: `timestamp with time zone` ou `timestamp`)
+* **`ends_at`** (Tipo: `timestamp with time zone` ou `timestamp`)
+* **`origin`** (Tipo: `text` - O site sempre enviará o valor `'site'`)
+* **`status`** (Tipo: `text` - O site sempre enviará o valor `'agendado'`)
+* **`notes`** (Tipo: `text` - Usada para armazenar o nome do serviço, do profissional e as observações do cliente)
+* **`created_at`** (Tipo: `timestamp with time zone` ou `timestamp` | Default Value: `now()`)
+
+**⚠️ Regra Crítica de Permissão (Allow Nullable):**
+O site foi programado para simplificar o envio das informações de serviço e profissional agrupando-as na coluna `notes`. Por causa disso, caso você possua outras colunas na tabela (como `service_id`, `service_name`, `professional_id`, `professional_name`, `date`, `time`, `price`, etc.), você deve **obrigatoriamente desativar a restrição "Not Null"** editando essas colunas e ligando a chave **Allow Nullable**. Se você não ligar essa chave nessas colunas, o banco de dados vai dar erro e impedir o cliente de agendar.
+
+---
+
 ## ⚠️ Atenção: Integração Frontend/Backend
 
 **Aviso Importante para a equipe de Backend:**
