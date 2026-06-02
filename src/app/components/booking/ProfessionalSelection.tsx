@@ -60,21 +60,19 @@ export function ProfessionalSelection({ selectedService, selectedProfessional, o
       <div className="grid md:grid-cols-3 gap-4">
         {professionals.map((professional) => {
           const isSelected = selectedProfessional?.id === professional.id;
-          
+
           return (
             <Card
               key={professional.id}
               onClick={() => onSelect(professional)}
-              className={`p-4 cursor-pointer transition-all hover:scale-105 ${
-                isSelected 
-                  ? 'bg-amber-500/20 border-amber-500 border-2' 
-                  : 'bg-zinc-800 border-zinc-700 hover:border-amber-500/50'
-              }`}
+              className={`p-4 cursor-pointer transition-all hover:scale-105 ${isSelected
+                ? 'bg-amber-500/20 border-amber-500 border-2'
+                : 'bg-zinc-800 border-zinc-700 hover:border-amber-500/50'
+                }`}
             >
               <div className="flex flex-col items-center text-center">
-                <div className={`w-24 h-24 rounded-full overflow-hidden mb-3 ${
-                  isSelected ? 'ring-4 ring-amber-500' : ''
-                }`}>
+                <div className={`w-24 h-24 rounded-full overflow-hidden mb-3 ${isSelected ? 'ring-4 ring-amber-500' : ''
+                  }`}>
                   <ImageWithFallback
                     src={professional.photo}
                     alt={professional.name}

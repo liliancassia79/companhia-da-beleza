@@ -25,11 +25,11 @@ export function DarkGallery() {
             Nossos melhores trabalhos
           </p>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {galleryImages.map((image, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="relative overflow-hidden rounded-lg group cursor-pointer aspect-square"
             >
               <ImageWithFallback
