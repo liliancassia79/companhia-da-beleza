@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createAppointment } from "../../services/appointmentsApi";
+import { createAppointment, CreateAppointmentResponse } from "../../services/appointmentsApi";
 import { motion } from "motion/react";
 import {CheckCircle, Calendar, Clock, User, Scissors, CreditCard, MessageCircle} from "lucide-react";
 import { Button } from "../ui/button";
@@ -10,9 +10,10 @@ import { ptBR } from "date-fns/locale";
 interface ConfirmationModalProps {
   bookingData: BookingData;
   onClose: () => void;
+  appointmentResponse?: CreateAppointmentResponse | null;
 }
 
-export function ConfirmationModal({ bookingData, onClose }: ConfirmationModalProps) {
+export function ConfirmationModal({ bookingData, onClose, appointmentResponse }: ConfirmationModalProps) {
   const [isCreatingAppointment, setIsCreatingAppointment] = useState(false);
   const [error, setError] = useState("");
 
@@ -36,14 +37,20 @@ export function ConfirmationModal({ bookingData, onClose }: ConfirmationModalPro
       setIsCreatingAppointment(true);
       setError("");
 
+      if (appointmentResponse && appointmentResponse.whatsappLink) {
+        window.open(appointmentResponse.whatsappLink, "_blank");
+        return;
+      }
+
+      // fallback: create appointment here (if not created by parent)
       const response = await createAppointment({
         clientName: bookingData.clientName,
         clientPhone: bookingData.clientPhone,
         clientEmail: bookingData.clientEmail,
-        serviceId: bookingData.service.id,
-        professionalId: bookingData.professional.id,
-        date: bookingData.date,
-        time: bookingData.time
+        serviceId: bookingData.service!.id,
+        professionalId: bookingData.professional!.id,
+        date: bookingData.date!,
+        time: bookingData.time!
       });
 
       window.open(response.whatsappLink, "_blank");

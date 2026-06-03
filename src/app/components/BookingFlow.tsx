@@ -7,7 +7,7 @@ import { ProfessionalSelection } from "./booking/ProfessionalSelection";
 import { DateTimeSelection } from "./booking/DateTimeSelection";
 import { ClientInfo, isClientInfoValid } from "./booking/ClientInfo";
 import { ConfirmationModal } from "./booking/ConfirmationModal";
-import { supabase } from "../../supabaseClient";
+import { createAppointment, CreateAppointmentResponse } from "../services/appointmentsApi";
 
 interface BookingFlowProps {
   onClose: () => void;
@@ -52,6 +52,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
   const [bookingData, setBookingData] = useState<BookingData>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [carregando, setCarregando] = useState(false);
+  const [appointmentResponse, setAppointmentResponse] = useState<CreateAppointmentResponse | null>(null);
 
   const handleNext = async () => {
     if (currentStep < 4) {
@@ -59,34 +60,19 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
     } else {
       setCarregando(true);
       try {
-        let startsAt = new Date().toISOString();
-        let endsAt = new Date(Date.now() + 60 * 60000).toISOString();
-        
-        if (bookingData.date && bookingData.time) {
-           const [year, month, day] = bookingData.date.split('-');
-           const [hours, minutes] = bookingData.time.split(':');
-           const localDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
-           startsAt = localDate.toISOString();
-           const localEnd = new Date(localDate.getTime() + 60 * 60000);
-           endsAt = localEnd.toISOString();
-        }
+        // Enviar ao backend para que ele persista no banco e aplique validações
+        const payload = {
+          clientName: bookingData.clientName || "",
+          clientPhone: bookingData.clientPhone || "",
+          clientEmail: bookingData.clientEmail,
+          serviceId: bookingData.service?.id as number,
+          professionalId: bookingData.professional?.id as number,
+          date: bookingData.date || "",
+          time: bookingData.time || "",
+        };
 
-        const { data, error } = await supabase
-          .from('appointments')
-          .insert([
-            { 
-              client_name: bookingData.clientName, 
-              client_phone: bookingData.clientPhone, 
-              starts_at: startsAt,
-              ends_at: endsAt,
-              origin: 'site',
-              status: 'agendado',
-              notes: `[SITE] Serviço: ${bookingData.service?.name || 'Não informado'} | Profissional: ${bookingData.professional?.name || 'Qualquer um'} \n${bookingData.notes ? 'Obs: ' + bookingData.notes : ''}`
-            }
-          ]);
-
-        if (error) throw error;
-        
+        const resp = await createAppointment(payload);
+        setAppointmentResponse(resp);
         setShowConfirmation(true);
       } catch (error: any) {
         console.error('Erro ao agendar:', error);
@@ -230,6 +216,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
       {showConfirmation && (
         <ConfirmationModal 
           bookingData={bookingData}
+          appointmentResponse={appointmentResponse}
           onClose={() => {
             setShowConfirmation(false);
             onClose();
