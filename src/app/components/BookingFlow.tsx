@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { X, Check } from "lucide-react";
 import { Button } from "./ui/button";
@@ -89,6 +89,13 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
     }
   };
 
+  const resetBookingFlow = () => {
+    setCurrentStep(1);
+    setBookingData({});
+    setAppointmentResponse(null);
+    setShowConfirmation(false);
+  };
+
   const updateBookingData = (data: Partial<BookingData>) => {
     setBookingData({ ...bookingData, ...data });
   };
@@ -116,7 +123,10 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
           <div className="flex items-center justify-between p-4 sm:p-6 border-b border-zinc-800">
             <h2 className="text-2xl text-white">Novo Agendamento</h2>
             <button 
-              onClick={onClose}
+              onClick={() => {
+                resetBookingFlow();
+                onClose();
+              }}
               className="text-gray-400 hover:text-white transition-colors"
             >
               <X className="w-6 h-6" />
@@ -164,7 +174,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
               <ServiceSelection 
                 selectedService={bookingData.service}
                 notes={bookingData.notes}
-                onSelect={(service) => updateBookingData({ service })}
+                onSelect={(service) => updateBookingData({ service, professional: undefined, date: undefined, time: undefined })}
                 onNotesChange={(notes) => updateBookingData({ notes })}
               />
             )}
@@ -172,7 +182,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
               <ProfessionalSelection 
                 selectedService={bookingData.service}
                 selectedProfessional={bookingData.professional}
-                onSelect={(professional) => updateBookingData({ professional })}
+                onSelect={(professional) => updateBookingData({ professional, date: undefined, time: undefined })}
               />
             )}
             {currentStep === 3 && (
@@ -180,7 +190,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
                 selectedProfessional={bookingData.professional}
                 selectedDate={bookingData.date}
                 selectedTime={bookingData.time}
-                onSelectDate={(date) => updateBookingData({ date })}
+                onSelectDate={(date) => updateBookingData({ date, time: undefined })}
                 onSelectTime={(time) => updateBookingData({ time })}
               />
             )}

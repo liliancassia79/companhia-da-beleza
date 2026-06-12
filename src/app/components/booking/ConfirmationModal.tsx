@@ -39,6 +39,7 @@ export function ConfirmationModal({ bookingData, onClose, appointmentResponse }:
 
       if (appointmentResponse && appointmentResponse.whatsappLink) {
         window.open(appointmentResponse.whatsappLink, "_blank");
+        onClose();
         return;
       }
 
@@ -54,6 +55,7 @@ export function ConfirmationModal({ bookingData, onClose, appointmentResponse }:
       });
 
       window.open(response.whatsappLink, "_blank");
+      onClose();
     } catch (error) {
       setError("Não foi possível criar o agendamento. Tente outro horário.");
     } finally {
