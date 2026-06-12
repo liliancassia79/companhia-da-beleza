@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { X, Check } from "lucide-react";
 import { Button } from "./ui/button";
@@ -7,7 +7,7 @@ import { ProfessionalSelection } from "./booking/ProfessionalSelection";
 import { DateTimeSelection } from "./booking/DateTimeSelection";
 import { ClientInfo, isClientInfoValid } from "./booking/ClientInfo";
 import { ConfirmationModal } from "./booking/ConfirmationModal";
-import { supabase } from "../../supabaseClient";
+import { createAppointment, CreateAppointmentResponse } from "../services/appointmentsApi";
 
 interface BookingFlowProps {
   onClose: () => void;
@@ -52,6 +52,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
   const [bookingData, setBookingData] = useState<BookingData>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [carregando, setCarregando] = useState(false);
+  const [appointmentResponse, setAppointmentResponse] = useState<CreateAppointmentResponse | null>(null);
 
   const handleNext = async () => {
     if (currentStep < 4) {
@@ -59,34 +60,19 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
     } else {
       setCarregando(true);
       try {
-        let startsAt = new Date().toISOString();
-        let endsAt = new Date(Date.now() + 60 * 60000).toISOString();
-        
-        if (bookingData.date && bookingData.time) {
-           const [year, month, day] = bookingData.date.split('-');
-           const [hours, minutes] = bookingData.time.split(':');
-           const localDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
-           startsAt = localDate.toISOString();
-           const localEnd = new Date(localDate.getTime() + 60 * 60000);
-           endsAt = localEnd.toISOString();
-        }
+        // Enviar ao backend para que ele persista no banco e aplique validações
+        const payload = {
+          clientName: bookingData.clientName || "",
+          clientPhone: bookingData.clientPhone || "",
+          clientEmail: bookingData.clientEmail,
+          serviceId: bookingData.service?.id as number,
+          professionalId: bookingData.professional?.id as number,
+          date: bookingData.date || "",
+          time: bookingData.time || "",
+        };
 
-        const { data, error } = await supabase
-          .from('appointments')
-          .insert([
-            { 
-              client_name: bookingData.clientName, 
-              client_phone: bookingData.clientPhone, 
-              starts_at: startsAt,
-              ends_at: endsAt,
-              origin: 'site',
-              status: 'agendado',
-              notes: `[SITE] Serviço: ${bookingData.service?.name || 'Não informado'} | Profissional: ${bookingData.professional?.name || 'Qualquer um'} \n${bookingData.notes ? 'Obs: ' + bookingData.notes : ''}`
-            }
-          ]);
-
-        if (error) throw error;
-        
+        const resp = await createAppointment(payload);
+        setAppointmentResponse(resp);
         setShowConfirmation(true);
       } catch (error: any) {
         console.error('Erro ao agendar:', error);
@@ -101,6 +87,13 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const resetBookingFlow = () => {
+    setCurrentStep(1);
+    setBookingData({});
+    setAppointmentResponse(null);
+    setShowConfirmation(false);
   };
 
   const updateBookingData = (data: Partial<BookingData>) => {
@@ -130,7 +123,10 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
           <div className="flex items-center justify-between p-4 sm:p-6 border-b border-zinc-800">
             <h2 className="text-2xl text-white">Novo Agendamento</h2>
             <button 
-              onClick={onClose}
+              onClick={() => {
+                resetBookingFlow();
+                onClose();
+              }}
               className="text-gray-400 hover:text-white transition-colors"
             >
               <X className="w-6 h-6" />
@@ -178,7 +174,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
               <ServiceSelection 
                 selectedService={bookingData.service}
                 notes={bookingData.notes}
-                onSelect={(service) => updateBookingData({ service })}
+                onSelect={(service) => updateBookingData({ service, professional: undefined, date: undefined, time: undefined })}
                 onNotesChange={(notes) => updateBookingData({ notes })}
               />
             )}
@@ -186,7 +182,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
               <ProfessionalSelection 
                 selectedService={bookingData.service}
                 selectedProfessional={bookingData.professional}
-                onSelect={(professional) => updateBookingData({ professional })}
+                onSelect={(professional) => updateBookingData({ professional, date: undefined, time: undefined })}
               />
             )}
             {currentStep === 3 && (
@@ -194,7 +190,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
                 selectedProfessional={bookingData.professional}
                 selectedDate={bookingData.date}
                 selectedTime={bookingData.time}
-                onSelectDate={(date) => updateBookingData({ date })}
+                onSelectDate={(date) => updateBookingData({ date, time: undefined })}
                 onSelectTime={(time) => updateBookingData({ time })}
               />
             )}
@@ -230,6 +226,7 @@ export function BookingFlow({ onClose }: BookingFlowProps) {
       {showConfirmation && (
         <ConfirmationModal 
           bookingData={bookingData}
+          appointmentResponse={appointmentResponse}
           onClose={() => {
             setShowConfirmation(false);
             onClose();

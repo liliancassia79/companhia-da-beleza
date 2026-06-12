@@ -29,6 +29,14 @@ export function DateTimeSelection({
     selectedDate ? parseSelectedDate(selectedDate) : undefined
   );
 
+  useEffect(() => {
+    if (selectedDate) {
+      setDate(parseSelectedDate(selectedDate));
+    } else {
+      setDate(undefined);
+    }
+  }, [selectedDate]);
+
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [loadingTimes, setLoadingTimes] = useState(false);
   const [error, setError] = useState("");
